@@ -6,7 +6,9 @@ namespace FakerLibrary.Generators
     {
         public object Generate(GeneratorContext generatorContext)
         {
-            return generatorContext.Random.NextDouble();
+            var result = generatorContext.Random.NextDouble();
+            var power = Math.Pow(10, generatorContext.Random.Next(0, 31));
+            return result * power;
         }
 
         public bool CanGenerate(Type type)
