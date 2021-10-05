@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakerLibrary", "FakerLibrar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleProject", "SampleProject\SampleProject.csproj", "{56E62933-A091-414D-811B-0C1CE6D32CD7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakerLibrary.Tests", "FakerLibrary.Tests\FakerLibrary.Tests.csproj", "{6C099CFB-0F53-4258-9E56-F45D25AD8AEE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{56E62933-A091-414D-811B-0C1CE6D32CD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56E62933-A091-414D-811B-0C1CE6D32CD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56E62933-A091-414D-811B-0C1CE6D32CD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C099CFB-0F53-4258-9E56-F45D25AD8AEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C099CFB-0F53-4258-9E56-F45D25AD8AEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C099CFB-0F53-4258-9E56-F45D25AD8AEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C099CFB-0F53-4258-9E56-F45D25AD8AEE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
