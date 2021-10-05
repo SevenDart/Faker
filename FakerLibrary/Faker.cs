@@ -29,7 +29,7 @@ namespace FakerLibrary
         {
             var generatorContext = new GeneratorContext(new Random(), targetType, this);
 
-            var generator = _generators[targetType];
+            _generators.TryGetValue(targetType, out var generator);
             if (generator != null)
             {
                 return generator.Generate(generatorContext);
@@ -49,6 +49,8 @@ namespace FakerLibrary
                 var result = constructorInfo.Invoke(parameters.ToArray());
                 return result;
             }
+            
+            
 
             return CreateDefaultValue(targetType);
         } 
