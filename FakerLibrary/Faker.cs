@@ -38,6 +38,7 @@ namespace FakerLibrary
             var constructors = targetType.GetConstructors();
             var orderedConstructors = constructors.OrderByDescending(c => c.GetParameters().Length);
 
+            object result = null; 
             foreach (var constructorInfo in orderedConstructors)
             {
                 var parametersInfo = constructorInfo.GetParameters();
@@ -46,15 +47,30 @@ namespace FakerLibrary
                 {
                     parameters.Add(Create(parameter.ParameterType));
                 }
-                var result = constructorInfo.Invoke(parameters.ToArray());
-                return result;
+                result = constructorInfo.Invoke(parameters.ToArray());
             }
-            
-            
 
-            return CreateDefaultValue(targetType);
-        } 
+            if (result != null)
+            {
+                FillPublicFields(result, targetType, generatorContext);
+            }
 
+            return result ?? CreateDefaultValue(targetType);
+        }
+
+        private void FillPublicFields(object targetObject, Type targetType, GeneratorContext generatorContext)
+        {
+            var fields = targetType.GetFields();
+
+            foreach (var fieldInfo in fields)
+            {
+                if (fieldInfo.IsPublic && fieldInfo.GetValue(targetObject) == CreateDefaultValue(targetType))
+                {
+                    fieldInfo.SetValue(targetObject, Create(fieldInfo.FieldType));
+                }
+            }
+        }
+        
         private static object CreateDefaultValue(Type t)
         {
             return t.IsValueType 
