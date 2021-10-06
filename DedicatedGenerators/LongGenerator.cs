@@ -15,7 +15,7 @@ namespace DedicatedGenerators
 
         public bool CanGenerate(Type type)
         {
-            return type == typeof(long);
+            return type == typeof(long) || type == typeof(long?);
         }
     }
 }

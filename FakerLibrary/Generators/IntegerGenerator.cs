@@ -12,7 +12,7 @@ namespace FakerLibrary.Generators
 
         public bool CanGenerate(Type type)
         {
-            return type == typeof(int);
+            return type == typeof(int) || type == typeof(int?);
         }
     }
 }

@@ -8,13 +8,13 @@ namespace DedicatedGenerators
         public object Generate(GeneratorContext generatorContext)
         {
             var result = (float) generatorContext.Random.NextDouble();
-            var power = Math.Pow(10, generatorContext.Random.Next(0, 31));
+            var power = (float) Math.Pow(10, generatorContext.Random.Next(0, 31));
             return result * power;
         }
 
         public bool CanGenerate(Type type)
         {
-            return type == typeof(float);
+            return type == typeof(float) || type == typeof(float?);
         }
     }
 }
