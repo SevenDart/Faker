@@ -176,5 +176,20 @@ namespace FakerLibrary.Tests
             Assert.NotNull(testValue.List);
             Assert.NotZero(testValue.List.Count);
         }
+        
+        [Test]
+        public void DedicatedGeneratorsClass()
+        {
+            //Arrange
+            Type targetType = typeof(DedicatedGeneratorsClass);
+            
+            //Act
+            var testValue = _faker.Create<DedicatedGeneratorsClass>();
+            
+            //Assert
+            Assert.IsInstanceOf(targetType, testValue);
+            Assert.NotNull(testValue.X);
+            Assert.NotNull(testValue.Y);
+        }
     }
 }

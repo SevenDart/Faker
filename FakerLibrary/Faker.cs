@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using FakerLibrary.Generators;
 
 namespace FakerLibrary
@@ -9,6 +10,20 @@ namespace FakerLibrary
     {
         private readonly List<IValueGenerator> _generators;
 
+        private static readonly List<IValueGenerator> ExternalGenerators;
+        static Faker()
+        {
+            ExternalGenerators = new List<IValueGenerator>();
+            var assembly = Assembly.LoadFile("D:\\CODE\\Csharp\\MPP_2\\FakerLibrary\\DedicatedGenerators.dll");
+            foreach (var type in assembly.GetTypes())
+            {
+                if (type.GetInterface(nameof(IValueGenerator)) != null)
+                {
+                    ExternalGenerators.Add((IValueGenerator)Activator.CreateInstance(type));
+                }
+            }
+        }
+        
         public Faker()
         {
             _generators = new List<IValueGenerator>
@@ -19,6 +34,11 @@ namespace FakerLibrary
                 {new StringGenerator()},
                 {new ListGenerator()}
             };
+
+            foreach (var externalGenerator in ExternalGenerators)
+            {
+                _generators.Add(externalGenerator);
+            }
         }
 
         public T Create<T>()
@@ -40,12 +60,10 @@ namespace FakerLibrary
             
             foreach (var target in generatorContext.Targets.Take(generatorContext.Targets.Count - 1))
             {
-                if (target == targetType)
-                {
-                    var decision = generatorContext.Random.Next(0, 2);
-                    if (decision == 0) 
-                        return null;
-                }
+                if (target != targetType) continue;
+                var decision = generatorContext.Random.Next(0, 2);
+                if (decision == 0) 
+                    return null;
             } 
 
             var constructors = targetType.GetConstructors();

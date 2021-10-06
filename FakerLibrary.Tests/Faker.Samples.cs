@@ -105,4 +105,10 @@ namespace FakerLibrary.Tests
     {
         public List<RecursiveFieldClass> List;
     }
+
+    class DedicatedGeneratorsClass
+    {
+        public long? X;
+        public float? Y;
+    }
 }
