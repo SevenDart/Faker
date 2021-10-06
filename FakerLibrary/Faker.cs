@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata;
 using FakerLibrary.Generators;
 
 namespace FakerLibrary
@@ -16,7 +15,9 @@ namespace FakerLibrary
             {
                 {new IntegerGenerator()},
                 {new BooleanGenerator()},
-                {new DoubleGenerator()}
+                {new DoubleGenerator()},
+                {new StringGenerator()},
+                {new ListGenerator()}
             };
         }
 
