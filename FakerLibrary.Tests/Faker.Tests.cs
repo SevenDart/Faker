@@ -191,5 +191,19 @@ namespace FakerLibrary.Tests
             Assert.NotNull(testValue.X);
             Assert.NotNull(testValue.Y);
         }
+        
+        [Test]
+        public void DateTimeClass()
+        {
+            //Arrange
+            Type targetType = typeof(DateTimeClass);
+            
+            //Act
+            var testValue = _faker.Create<DateTimeClass>();
+            
+            //Assert
+            Assert.IsInstanceOf(targetType, testValue);
+            Assert.NotNull(testValue.Time);
+        }
     }
 }

@@ -32,7 +32,8 @@ namespace FakerLibrary
                 {new BooleanGenerator()},
                 {new DoubleGenerator()},
                 {new StringGenerator()},
-                {new ListGenerator()}
+                {new ListGenerator()},
+                {new DateTimeGenerator()}
             };
 
             foreach (var externalGenerator in ExternalGenerators)
@@ -60,10 +61,12 @@ namespace FakerLibrary
             
             foreach (var target in generatorContext.Targets.Take(generatorContext.Targets.Count - 1))
             {
-                if (target != targetType) continue;
-                var decision = generatorContext.Random.Next(0, 2);
-                if (decision == 0) 
-                    return null;
+                if (target == targetType)
+                {
+                    var decision = generatorContext.Random.Next(0, 2);
+                    if (decision == 0) 
+                        return null;
+                }
             } 
 
             var constructors = targetType.GetConstructors();

@@ -111,4 +111,9 @@ namespace FakerLibrary.Tests
         public long? X;
         public float? Y;
     }
+
+    class DateTimeClass
+    {
+        public DateTime? Time;
+    }
 }
