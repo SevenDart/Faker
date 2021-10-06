@@ -41,13 +41,21 @@ namespace FakerLibrary
             object result = null; 
             foreach (var constructorInfo in orderedConstructors)
             {
-                var parametersInfo = constructorInfo.GetParameters();
-                var parameters = new List<object>();
-                foreach (var parameter in parametersInfo)
+                try
                 {
-                    parameters.Add(Create(parameter.ParameterType));
+                    var parametersInfo = constructorInfo.GetParameters();
+                    var parameters = new List<object>();
+                    foreach (var parameter in parametersInfo)
+                    {
+                        parameters.Add(Create(parameter.ParameterType));
+                    }
+
+                    result = constructorInfo.Invoke(parameters.ToArray());
                 }
-                result = constructorInfo.Invoke(parameters.ToArray());
+                catch
+                {
+                    //ignored
+                }
             }
 
             if (result == null) 
