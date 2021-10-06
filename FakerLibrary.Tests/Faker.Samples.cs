@@ -94,4 +94,9 @@ namespace FakerLibrary.Tests
             X = x;
         }
     }
+
+    class RecursiveFieldClass
+    {
+        public RecursiveFieldClass field;
+    }
 }

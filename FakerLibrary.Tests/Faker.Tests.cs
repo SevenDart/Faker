@@ -148,5 +148,18 @@ namespace FakerLibrary.Tests
             Assert.NotNull(testValue.X);
             Assert.Null(testValue.Y);
         }
+        
+        [Test]
+        public void CreateRecursiveFieldClass()
+        {
+            //Arrange
+            Type targetType = typeof(RecursiveFieldClass);
+            
+            //Act
+            var testValue = _faker.Create<RecursiveFieldClass>();
+            
+            //Assert
+            Assert.IsInstanceOf(targetType, testValue);
+        }
     }
 }
