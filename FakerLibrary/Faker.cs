@@ -50,12 +50,13 @@ namespace FakerLibrary
                 result = constructorInfo.Invoke(parameters.ToArray());
             }
 
-            if (result != null)
-            {
-                FillPublicFields(result, targetType, generatorContext);
-            }
+            if (result == null) 
+                return CreateDefaultValue(targetType);
+            
+            FillPublicFields(result, targetType, generatorContext);
+            FillPublicProperties(result, targetType, generatorContext);
 
-            return result ?? CreateDefaultValue(targetType);
+            return result;
         }
 
         private void FillPublicFields(object targetObject, Type targetType, GeneratorContext generatorContext)
@@ -67,6 +68,19 @@ namespace FakerLibrary
                 if (fieldInfo.IsPublic && fieldInfo.GetValue(targetObject) == CreateDefaultValue(targetType))
                 {
                     fieldInfo.SetValue(targetObject, Create(fieldInfo.FieldType));
+                }
+            }
+        }
+        
+        private void FillPublicProperties(object targetObject, Type targetType, GeneratorContext generatorContext)
+        {
+            var properties = targetType.GetProperties();
+
+            foreach (var property in properties)
+            {
+                if (property.CanWrite && property.GetValue(targetObject) == CreateDefaultValue(targetType))
+                {
+                    property.SetValue(targetObject, Create(property.PropertyType));
                 }
             }
         }
