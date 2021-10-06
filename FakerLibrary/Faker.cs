@@ -8,32 +8,44 @@ namespace FakerLibrary
 {
     public class Faker : IFaker
     {
-        private readonly Dictionary<Type, IValueGenerator> _generators;
+        private readonly List<IValueGenerator> _generators;
 
         public Faker()
         {
-            _generators = new Dictionary<Type, IValueGenerator>
+            _generators = new List<IValueGenerator>
             {
-                {typeof(int), new IntegerGenerator()},
-                {typeof(bool), new BooleanGenerator()},
-                {typeof(double), new DoubleGenerator()}
+                {new IntegerGenerator()},
+                {new BooleanGenerator()},
+                {new DoubleGenerator()}
             };
         }
 
         public T Create<T>()
         {
-            return (T) Create(typeof(T));
+            var generatorContext = new GeneratorContext(new Random(), this);
+            generatorContext.Targets.Push(typeof(T));
+            return (T) Create(typeof(T), generatorContext);
         }
 
-        private object Create(Type targetType)
+        private object Create(Type targetType, GeneratorContext generatorContext)
         {
-            var generatorContext = new GeneratorContext(new Random(), targetType, this);
-
-            _generators.TryGetValue(targetType, out var generator);
-            if (generator != null)
+            foreach (var generator in _generators)
             {
-                return generator.Generate(generatorContext);
+                if (generator.CanGenerate(targetType))
+                {
+                    return generator.Generate(generatorContext);
+                }
             }
+            
+            foreach (var target in generatorContext.Targets.Take(generatorContext.Targets.Count - 1))
+            {
+                if (target == targetType)
+                {
+                    var decision = generatorContext.Random.Next(0, 2);
+                    if (decision == 0) 
+                        return null;
+                }
+            } 
 
             var constructors = targetType.GetConstructors();
             var orderedConstructors = constructors.OrderByDescending(c => c.GetParameters().Length);
@@ -47,10 +59,13 @@ namespace FakerLibrary
                     var parameters = new List<object>();
                     foreach (var parameter in parametersInfo)
                     {
-                        parameters.Add(Create(parameter.ParameterType));
+                        generatorContext.Targets.Push(parameter.ParameterType);
+                        parameters.Add(Create(parameter.ParameterType, generatorContext));
+                        generatorContext.Targets.Pop();
                     }
 
                     result = constructorInfo.Invoke(parameters.ToArray());
+                    break;
                 }
                 catch
                 {
@@ -75,7 +90,9 @@ namespace FakerLibrary
             {
                 if (fieldInfo.IsPublic && fieldInfo.GetValue(targetObject) == CreateDefaultValue(fieldInfo.FieldType))
                 {
-                    fieldInfo.SetValue(targetObject, Create(fieldInfo.FieldType));
+                    generatorContext.Targets.Push(fieldInfo.FieldType);
+                    fieldInfo.SetValue(targetObject, Create(fieldInfo.FieldType, generatorContext));
+                    generatorContext.Targets.Pop();
                 }
             }
         }
@@ -88,7 +105,9 @@ namespace FakerLibrary
             {
                 if (property.CanWrite && property.GetValue(targetObject) == CreateDefaultValue(property.PropertyType))
                 {
-                    property.SetValue(targetObject, Create(property.PropertyType));
+                    generatorContext.Targets.Push(property.PropertyType);
+                    property.SetValue(targetObject, Create(property.PropertyType, generatorContext));
+                    generatorContext.Targets.Pop();
                 }
             }
         }
