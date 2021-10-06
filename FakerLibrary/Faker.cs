@@ -73,7 +73,7 @@ namespace FakerLibrary
 
             foreach (var fieldInfo in fields)
             {
-                if (fieldInfo.IsPublic && fieldInfo.GetValue(targetObject) == CreateDefaultValue(targetType))
+                if (fieldInfo.IsPublic && fieldInfo.GetValue(targetObject) == CreateDefaultValue(fieldInfo.FieldType))
                 {
                     fieldInfo.SetValue(targetObject, Create(fieldInfo.FieldType));
                 }
@@ -86,7 +86,7 @@ namespace FakerLibrary
 
             foreach (var property in properties)
             {
-                if (property.CanWrite && property.GetValue(targetObject) == CreateDefaultValue(targetType))
+                if (property.CanWrite && property.GetValue(targetObject) == CreateDefaultValue(property.PropertyType))
                 {
                     property.SetValue(targetObject, Create(property.PropertyType));
                 }
