@@ -161,5 +161,20 @@ namespace FakerLibrary.Tests
             //Assert
             Assert.IsInstanceOf(targetType, testValue);
         }
+        
+        [Test]
+        public void CreateListClass()
+        {
+            //Arrange
+            Type targetType = typeof(ListClass);
+            
+            //Act
+            var testValue = _faker.Create<ListClass>();
+            
+            //Assert
+            Assert.IsInstanceOf(targetType, testValue);
+            Assert.NotNull(testValue.List);
+            Assert.NotZero(testValue.List.Count);
+        }
     }
 }

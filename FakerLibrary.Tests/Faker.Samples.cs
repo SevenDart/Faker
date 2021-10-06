@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace FakerLibrary.Tests
 {
@@ -98,5 +99,10 @@ namespace FakerLibrary.Tests
     class RecursiveFieldClass
     {
         public RecursiveFieldClass field;
+    }
+
+    class ListClass
+    {
+        public List<RecursiveFieldClass> List;
     }
 }
