@@ -103,6 +103,22 @@ namespace FakerLibrary.Tests
         }
         
         [Test]
+        public void CreatePropertiesClass()
+        {
+            //Arrange
+            Type targetType = typeof(PropertiesClass);
+            
+            //Act
+            var testValue = _faker.Create<PropertiesClass>();
+            
+            //Assert
+            Assert.IsInstanceOf(targetType, testValue);
+            Assert.NotNull(testValue.X);
+            Assert.NotNull(testValue.Y);
+            Assert.Null(testValue.Z);
+        }
+        
+        [Test]
         public void CreateClassWithInnerClass()
         {
             //Arrange

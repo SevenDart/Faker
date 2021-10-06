@@ -55,6 +55,13 @@
         public bool? Y;
         public double? Z;
     }
+    
+    class PropertiesClass
+    {
+        public int? X { get; set; }
+        public bool? Y { get; set; }
+        public double? Z { get; }
+    }
 
     class ClassWithInnerClass
     {
