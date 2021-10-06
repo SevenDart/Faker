@@ -133,5 +133,20 @@ namespace FakerLibrary.Tests
             Assert.NotNull(testValue.Y);
             Assert.NotNull(testValue.Z);
         }
+        
+        [Test]
+        public void CreateClassWithExceptionConstructor()
+        {
+            //Arrange
+            Type targetType = typeof(ClassWithExceptionConstructor);
+            
+            //Act
+            var testValue = _faker.Create<ClassWithExceptionConstructor>();
+            
+            //Assert
+            Assert.IsInstanceOf(targetType, testValue);
+            Assert.NotNull(testValue.X);
+            Assert.Null(testValue.Y);
+        }
     }
 }

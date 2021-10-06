@@ -1,4 +1,6 @@
-﻿namespace FakerLibrary.Tests
+﻿using System;
+
+namespace FakerLibrary.Tests
 {
     class EmptyClass
     {
@@ -74,6 +76,22 @@
             X = x;
             Y = y;
             Z = z;
+        }
+    }
+
+    class ClassWithExceptionConstructor
+    {
+        public int? X;
+        public bool? Y { get; }
+
+        public ClassWithExceptionConstructor(int x, bool y)
+        {
+            throw new NotImplementedException();
+        }
+        
+        public ClassWithExceptionConstructor(int x)
+        {
+            X = x;
         }
     }
 }
