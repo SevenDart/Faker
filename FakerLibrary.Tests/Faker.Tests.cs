@@ -1,4 +1,5 @@
 using System;
+using FakerLibrary.Generators;
 using NUnit.Framework;
 
 namespace FakerLibrary.Tests
@@ -204,6 +205,38 @@ namespace FakerLibrary.Tests
             //Assert
             Assert.IsInstanceOf(targetType, testValue);
             Assert.NotNull(testValue.Time);
+        }
+        
+        [Test]
+        public void CustomConfigureFieldClass()
+        {
+            //Arrange
+            Type targetType = typeof(CustomConfigureFieldClass);
+            var config = new FakerConfig();
+            config.Add<CustomConfigureFieldClass, int?, CustomIntGenerator>(custom => custom.testField);
+
+            //Act
+            var testValue = _faker.Create<CustomConfigureFieldClass>(config);
+            
+            //Assert
+            Assert.IsInstanceOf(targetType, testValue);
+            Assert.AreEqual(1, testValue.testField);
+        }
+        
+        [Test]
+        public void CustomConfigurePropertyClass()
+        {
+            //Arrange
+            Type targetType = typeof(CustomConfigurePropertyClass);
+            var config = new FakerConfig();
+            config.Add<CustomConfigurePropertyClass, int?, CustomIntGenerator>(custom => custom.TestField);
+
+            //Act
+            var testValue = _faker.Create<CustomConfigurePropertyClass>(config);
+            
+            //Assert
+            Assert.IsInstanceOf(targetType, testValue);
+            Assert.AreEqual(1, testValue.TestField);
         }
     }
 }

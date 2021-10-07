@@ -44,7 +44,14 @@ namespace FakerLibrary
 
         public T Create<T>()
         {
-            var generatorContext = new GeneratorContext(new Random(), this);
+            var generatorContext = new GeneratorContext(new Random(), this, new FakerConfig());
+            generatorContext.Targets.Push(typeof(T));
+            return (T) Create(typeof(T), generatorContext);
+        }
+
+        public T Create<T>(FakerConfig fakerConfig)
+        {
+            var generatorContext = new GeneratorContext(new Random(), this, fakerConfig);
             generatorContext.Targets.Push(typeof(T));
             return (T) Create(typeof(T), generatorContext);
         }
@@ -81,9 +88,21 @@ namespace FakerLibrary
                     var parameters = new List<object>();
                     foreach (var parameter in parametersInfo)
                     {
-                        generatorContext.Targets.Push(parameter.ParameterType);
-                        parameters.Add(Create(parameter.ParameterType, generatorContext));
-                        generatorContext.Targets.Pop();
+                        generatorContext.FakerConfig.Configs.TryGetValue(targetType, out var list);
+                        var fieldConfig = list?.FirstOrDefault(config => 
+                            (char.ToLower(config.MemberInfo.Name[0]) + config.MemberInfo.Name.Substring(1)) == parameter.Name);
+                        if (fieldConfig != null)
+                        {
+                            generatorContext.Targets.Push(parameter.ParameterType);
+                            parameters.Add(fieldConfig.Generator.Generate(generatorContext));
+                            generatorContext.Targets.Pop();
+                        }
+                        else
+                        {
+                            generatorContext.Targets.Push(parameter.ParameterType);
+                            parameters.Add(Create(parameter.ParameterType, generatorContext));
+                            generatorContext.Targets.Pop();
+                        }
                     }
 
                     result = constructorInfo.Invoke(parameters.ToArray());
@@ -110,8 +129,20 @@ namespace FakerLibrary
 
             foreach (var fieldInfo in fields)
             {
-                if (fieldInfo.IsPublic && fieldInfo.GetValue(targetObject) == CreateDefaultValue(fieldInfo.FieldType))
+                if (!fieldInfo.IsPublic) continue;
+                
+                generatorContext.FakerConfig.Configs.TryGetValue(targetType, out var list);
+                var fieldConfig = list?.FirstOrDefault(config => config.MemberInfo.Name == fieldInfo.Name);
+                if (fieldConfig != null)
                 {
+                    generatorContext.Targets.Push(fieldInfo.FieldType);
+                    fieldInfo.SetValue(targetObject, fieldConfig.Generator.Generate(generatorContext));
+                    generatorContext.Targets.Pop();
+                }
+                else
+                {
+                    if (fieldInfo.GetValue(targetObject) != CreateDefaultValue(fieldInfo.FieldType)) continue;
+                    
                     generatorContext.Targets.Push(fieldInfo.FieldType);
                     fieldInfo.SetValue(targetObject, Create(fieldInfo.FieldType, generatorContext));
                     generatorContext.Targets.Pop();
@@ -125,8 +156,20 @@ namespace FakerLibrary
 
             foreach (var property in properties)
             {
-                if (property.CanWrite && property.GetValue(targetObject) == CreateDefaultValue(property.PropertyType))
+                if (!property.CanWrite) continue;
+                
+                generatorContext.FakerConfig.Configs.TryGetValue(targetType, out var list);
+                var fieldConfig = list?.FirstOrDefault(config => config.MemberInfo.Name == property.Name);
+                if (fieldConfig != null)
                 {
+                    generatorContext.Targets.Push(property.PropertyType);
+                    property.SetValue(targetObject, fieldConfig.Generator.Generate(generatorContext));
+                    generatorContext.Targets.Pop();
+                }
+                else
+                {
+                    if (property.GetValue(targetObject) != CreateDefaultValue(property.PropertyType)) continue;
+
                     generatorContext.Targets.Push(property.PropertyType);
                     property.SetValue(targetObject, Create(property.PropertyType, generatorContext));
                     generatorContext.Targets.Pop();

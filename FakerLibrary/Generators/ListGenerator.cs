@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace FakerLibrary.Generators
 {
@@ -15,11 +16,20 @@ namespace FakerLibrary.Generators
 
             var length = generatorContext.Random.Next(1000000);
 
-            var method = typeof(IFaker).GetMethod("Create").MakeGenericMethod(genericTypeArgument);
+            var fakerMethods = typeof(IFaker).GetMethods();
+            MethodInfo executingMethod = fakerMethods[0];
+            foreach (var fakerMethod in fakerMethods)
+            {
+                if (fakerMethod.GetParameters().Length == 1)
+                    executingMethod = fakerMethod;
+            }
+
+            executingMethod = executingMethod.MakeGenericMethod(genericTypeArgument);
+            
             for (int i = 0; i < length; i++)
             {
                 var obj = new []{
-                    method.Invoke(generatorContext.Faker, null)
+                    executingMethod.Invoke(generatorContext.Faker, new object[]{generatorContext.FakerConfig})
                 };
 
                 targetType.GetMethod("Add")?.Invoke(enumerable, obj);

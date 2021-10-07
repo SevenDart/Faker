@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FakerLibrary.Generators;
 
 namespace FakerLibrary.Tests
 {
@@ -115,5 +116,33 @@ namespace FakerLibrary.Tests
     class DateTimeClass
     {
         public DateTime? Time;
+    }
+
+    class CustomIntGenerator : IValueGenerator
+    {
+        public object Generate(GeneratorContext generatorContext)
+        {
+            return 1;
+        }
+
+        public bool CanGenerate(Type type)
+        {
+            return true;
+        }
+    }
+    
+    class CustomConfigureFieldClass
+    {
+        public int? testField;
+    }
+
+    class CustomConfigurePropertyClass
+    {
+        public int? TestField { get; }
+
+        public CustomConfigurePropertyClass(int testField)
+        {
+            TestField = testField;
+        }
     }
 }
