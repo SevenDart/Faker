@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace FakerLibrary.Generators
 {
@@ -7,14 +8,14 @@ namespace FakerLibrary.Generators
         public object Generate(GeneratorContext generatorContext)
         {
             var length = generatorContext.Random.Next(1000000);
-            var result = "";
+            StringBuilder result = new StringBuilder();
             for (var i = 0; i < length; i++)
             {
                 var nextChar = (char)generatorContext.Random.Next(255);
-                result += nextChar;
+                result.Append(nextChar);
             }
 
-            return result;
+            return result.ToString();
         }
 
         public bool CanGenerate(Type type)
