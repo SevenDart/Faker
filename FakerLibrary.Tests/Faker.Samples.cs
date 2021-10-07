@@ -145,4 +145,10 @@ namespace FakerLibrary.Tests
             TestField = testField;
         }
     }
+
+    struct SimpleFieldsStruct
+    {
+        public int? X;
+        public bool? Y;
+    }
 }

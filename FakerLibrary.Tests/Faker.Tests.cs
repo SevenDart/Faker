@@ -238,5 +238,20 @@ namespace FakerLibrary.Tests
             Assert.IsInstanceOf(targetType, testValue);
             Assert.AreEqual(1, testValue.TestField);
         }
+        
+        [Test]
+        public void CreateSimpleStruct()
+        {
+            //Arrange
+            Type targetType = typeof(SimpleFieldsStruct);
+
+            //Act
+            var testValue = _faker.Create<SimpleFieldsStruct>();
+            
+            //Assert
+            Assert.IsInstanceOf(targetType, testValue);
+            Assert.NotNull(testValue.X);
+            Assert.NotNull(testValue.Y);
+        }
     }
 }

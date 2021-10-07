@@ -114,9 +114,15 @@ namespace FakerLibrary
                 }
             }
 
-            if (result == null) 
-                return CreateDefaultValue(targetType);
-            
+            if (result == null)
+            {
+                if (!targetType.IsValueType)
+                {
+                    return CreateDefaultValue(targetType);
+                }
+                result = CreateDefaultValue(targetType);
+            }
+
             FillPublicFields(result, targetType, generatorContext);
             FillPublicProperties(result, targetType, generatorContext);
 
